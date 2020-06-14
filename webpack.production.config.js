@@ -1,18 +1,28 @@
 const path = require('path')
+const glob = require('glob')
 const webpack = require('webpack')
 const HappyPack = require('happypack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin') // 分离 css 和 js
 const { CleanWebpackPlugin } = require("clean-webpack-plugin")
-// 体积分析
+// 构建体积分析
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 // 构建速度分析
 // const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 // const smp = new SpeedMeasurePlugin();
 // 多进程压缩插件
 const TerserPlugin = require('terser-webpack-plugin')
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
+// 擦除 未被引用的 css 配置
+// const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+// const PurgecssPlugin = require('purgecss-webpack-plugin')
+// console.log('argv=---', process.execArgv, '\n', process.argv)
 
-console.log('argv=---', process.execArgv, '\n', process.argv)
+// 返回绝对路径
+// const PATHS = {
+//   src: path.join(__dirname, 'src')
+// }
+
 module.exports =
   // smp.wrap(
   {
@@ -108,20 +118,32 @@ module.exports =
       new webpack.optimize.OccurrenceOrderPlugin(), // 分配 id
       new ExtractTextPlugin('style.css'), // 分离 css/js
       new CleanWebpackPlugin(), // 清除prod文件中的残余文件
+      // 构建分析
       new BundleAnalyzerPlugin({
         analyzerMode: 'static',
         generateStatsFile: true
       }),
+      // 多进程构建
       new HappyPack({
-        loaders: ['babel-loader?presets[]=es2015']
-      })
+        loaders: ['babel-loader?presets[]=es2015&cacheDirectory=true'] // 开启loader 缓存
+      }),
+      // 开启缓存
+      new HardSourceWebpackPlugin(),
+      // 开启 css tree-shaking
+      // new MiniCssExtractPlugin({
+      //   filename: '[name].css'
+      // }),
+      // new PurgecssPlugin({
+      //   paths: glob.sync(`${PATHS.src}/**/*`, { nodir: true })
+      // })
     ],
     // C、优化构建配置项
     optimization: {
       minimize: true,
       minimizer: [
         new TerserPlugin({
-          parallel: 4
+          parallel: 4,
+          cache: true
         })
       ],
       splitChunks: {

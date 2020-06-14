@@ -4,6 +4,7 @@
     "vue",
     "env"
   ],
-  "compact": false
+  "compact": false,
+  // "modules": false
 }
 

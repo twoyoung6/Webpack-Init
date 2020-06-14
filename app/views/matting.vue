@@ -18,6 +18,7 @@
 <script>
 const Matting = require('../matting copy')
 export default {
+  name: 'matting',
   data: function (params) {
     return {
       mattingEditorOptions: {

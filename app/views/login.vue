@@ -3,7 +3,7 @@
     <div class="g-center login-page">
       <el-form class="login-form">
         <h1 class="main-title"><a href="https://twoyoung6.github.io/" target="_blank"><img src="../../image/panda.png" alt="logo">Webpack-Init</a></h1>
-        <p class="des">
+        <p class="des un-use">
           <!-- Symbol 引用字体图标的方式 -->
           <!-- <svg class="icon myIconStyle" aria-hidden="true">
         　　<use xlink:href="#icon-xiongmao1"></use>
@@ -39,6 +39,7 @@
 // import axios from 'axios';
 
 export default {
+  name: 'login',
   data() {
     return {
       username: '',
@@ -105,5 +106,8 @@ export default {
   }
   .login-page {
     background:#fff;
+  }
+  .un-use {
+    color: rosybrown;
   }
 </style>
